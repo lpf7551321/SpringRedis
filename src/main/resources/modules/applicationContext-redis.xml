@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath:conf/redis.properties"></context:property-placeholder>
+
+    <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="300"></property>
+        <property name="maxWaitMillis" value="1000"></property>
+        <property name="testOnBorrow" value="false"></property>
+    </bean>
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="jedisConfig"></property>
+        <property name="hostName" value="localhost"></property>
+        <property name="port" value="6379"></property>
+    </bean>
+
+    <bean id="jedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"></property>
+    </bean>
+
+    <bean id="redisService" class="com.netease.service.RedisServiceImpl"></bean>
+</beans>
